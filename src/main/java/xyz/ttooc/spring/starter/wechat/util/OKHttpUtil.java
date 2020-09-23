@@ -39,6 +39,7 @@ public class OKHttpUtil {
                 .get()
                 .build();
         String response = client.newCall(request).execute().body().string();
+        log.info("ok http client response : {}", response);
         return response;
     }
 
