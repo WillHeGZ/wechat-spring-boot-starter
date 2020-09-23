@@ -43,11 +43,10 @@ public class WeChatAppletService {
         paramsMap.put("grant_type", "authorization_code");
 
         String response = okHttpUtil.get(url, paramsMap);
-        ResponseBase responseBase = objectMapper.readValue(response, ResponseBase.class);
-        if (responseBase.getErrcode() == WE_CHAT_SUCCESS_RETURN_CODE) {
+        if (!response.contains("errcode")) {
             return objectMapper.readValue(response, CodeToSessionResponse.class);
         } else {
-            throw new RuntimeException(responseBase.getErrmsg());
+            throw new RuntimeException(response);
         }
     }
 
@@ -60,11 +59,10 @@ public class WeChatAppletService {
         paramsMap.put("secret", appSecretKey);
         String response = okHttpUtil.get(url, paramsMap);
 
-        ResponseBase responseBase = objectMapper.readValue(response, ResponseBase.class);
-        if (responseBase.getErrcode() == WE_CHAT_SUCCESS_RETURN_CODE) {
+        if (!response.contains("errcode")) {
             return objectMapper.readValue(response, GetAccessTokenResponse.class);
         } else {
-            throw new RuntimeException(responseBase.getErrmsg());
+            throw new RuntimeException(response);
         }
     }
 
