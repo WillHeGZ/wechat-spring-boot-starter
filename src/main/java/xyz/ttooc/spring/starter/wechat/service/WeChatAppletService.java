@@ -34,7 +34,7 @@ public class WeChatAppletService {
     }
 
     public CodeToSessionResponse code2Session(String wxCode) throws IOException {
-        log.info("code to session request : {}", wxCode);
+        log.info("weChat applet service request to code to session request : {}", wxCode);
         String url = baseUrl.concat("/sns/jscode2session");
         Map<String, String> paramsMap = new HashMap<>();
         paramsMap.put("appid", appId);
@@ -52,7 +52,7 @@ public class WeChatAppletService {
     }
 
     private GetAccessTokenResponse getAccessToken() throws IOException {
-        log.info("get access token");
+        log.info("weChat applet service request to get access token");
         String url = baseUrl.concat("/cgi-bin/token");
         Map<String, String> paramsMap = new HashMap<>();
         paramsMap.put("grant_type", "client_credential");
@@ -70,7 +70,7 @@ public class WeChatAppletService {
 
     public String decrypt(String encryptedData, String sessionKey, String iv) {
         try {
-            log.debug("decrypt by : {},{},{}", encryptedData, sessionKey, iv);
+            log.debug("weChat applet service request to decrypt by : {},{},{}", encryptedData, sessionKey, iv);
             String result = "";
 
             AES aes = new AES();
@@ -90,5 +90,15 @@ public class WeChatAppletService {
             log.error("throw error", t);
             throw new RuntimeException(t.getMessage());
         }
+    }
+
+    public String getCallbackIP() throws IOException {
+        log.info("weChat applet service request to get call back IP");
+        String url = baseUrl.concat("/cgi-bin/getcallbackip");
+        Map<String, String> paramsMap = new HashMap<>();
+        paramsMap.put("access_token", getAccessToken().getAccess_token());
+        String result = okHttpUtil.get(url, paramsMap);
+
+        return result;
     }
 }
